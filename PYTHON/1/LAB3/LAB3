@@ -1,0 +1,248 @@
+from typing import Callable, Optional
+import unittest
+
+
+def left_branch(root: int) -> int:
+    """
+    Вычисляет значение левого потомка
+    
+    Args:
+        root: Значение корневого узла
+        
+    Returns:
+        Значение левого потомка (root + 1)
+    """
+    return root + 1
+
+
+def right_branch(root: int) -> int:
+    """
+    Вычисляет значение правого потомка
+    
+    Args:
+        root: Значение корневого узла
+        
+    Returns:
+        Значение правого потомка (root - 1)
+    """
+    return root - 1
+
+
+def gen_bin_tree(height: int = 3, root: int = 13, 
+                l_b: Optional[Callable[[int], int]] = None,
+                r_b: Optional[Callable[[int], int]] = None) -> dict:
+    """
+    Рекурсивно генерирует бинарное дерево в виде словаря
+    
+    Args:
+        height: Высота дерева (по умолчанию 3)
+        root: Значение корневого узла (по умолчанию 13)
+        l_b: Функция для вычисления левого потомка (по умолчанию left_branch)
+        r_b: Функция для вычисления правого потомка (по умолчанию right_branch)
+        
+    Returns:
+        Словарь, представляющий бинарное дерево
+        
+    Raises:
+        ValueError: Если высота отрицательная
+    """
+    if height < 0:
+        raise ValueError("Высота дерева не может быть отрицательной")
+    
+    # Используем функции по умолчанию, если не переданы другие
+    left_func = l_b if l_b is not None else left_branch
+    right_func = r_b if r_b is not None else right_branch
+    
+    # Базовый случай: дерево высоты 0
+    if height == 0:
+        return {str(root): []}
+    
+    # Рекурсивный случай: строим левое и правое поддеревья
+    left_child = gen_bin_tree(height - 1, left_func(root), left_func, right_func)
+    right_child = gen_bin_tree(height - 1, right_func(root), left_func, right_func)
+    
+    return {str(root): [left_child, right_child]}
+
+
+class TestBinaryTree(unittest.TestCase):
+    """Тесты для функции gen_bin_tree"""
+    
+    def test_height_zero(self):
+        """Тест для дерева высоты 0"""
+        expected = {"13": []}
+        result = gen_bin_tree(height=0, root=13)
+        self.assertEqual(result, expected)
+    
+    def test_height_one(self):
+        """Тест для дерева высоты 1"""
+        expected = {"13": [{"14": []}, {"12": []}]}
+        result = gen_bin_tree(height=1, root=13)
+        self.assertEqual(result, expected)
+    
+    def test_height_two(self):
+        """Тест для дерева высоты 2"""
+        expected = {
+            "13": [
+                {"14": [
+                    {"15": []},
+                    {"13": []}
+                ]},
+                {"12": [
+                    {"13": []},
+                    {"11": []}
+                ]}
+            ]
+        }
+        result = gen_bin_tree(height=2, root=13)
+        self.assertEqual(result, expected)
+    
+    def test_default_parameters(self):
+        """Тест с параметрами по умолчанию"""
+        result = gen_bin_tree()
+        # Проверяем, что корень правильный и есть потомки
+        self.assertIn("13", result)
+        self.assertEqual(len(result["13"]), 2)
+    
+    def test_custom_functions(self):
+        """Тест с пользовательскими функциями для ветвей"""
+        def custom_left(x):
+            return x + 10
+        
+        def custom_right(x):
+            return x * 2
+        
+        result = gen_bin_tree(height=1, root=5, l_b=custom_left, r_b=custom_right)
+        expected = {"5": [{"15": []}, {"10": []}]}
+        self.assertEqual(result, expected)
+    
+    def test_lambda_functions(self):
+        """Тест с lambda-функциями."""
+        result = gen_bin_tree(
+            height=1, 
+            root=5, 
+            l_b=lambda x: x ** 2, 
+            r_b=lambda x: x + 100
+        )
+        expected = {"5": [{"25": []}, {"105": []}]}
+        self.assertEqual(result, expected)
+    
+    def test_negative_height(self):
+        """Тест с отрицательной высотой (должен вызывать исключение)."""
+        with self.assertRaises(ValueError):
+            gen_bin_tree(height=-1)
+    
+    def test_different_root_values(self):
+        """Тест с различными значениями корня."""
+        result = gen_bin_tree(height=1, root=100)
+        expected = {"100": [{"101": []}, {"99": []}]}
+        self.assertEqual(result, expected)
+
+
+# Альтернативные реализации с использованием других структур данных
+
+def gen_bin_tree_list(height: int = 3, root: int = 13,
+                     l_b: Optional[Callable[[int], int]] = None,
+                     r_b: Optional[Callable[[int], int]] = None) -> list:
+    """
+    Рекурсивно генерирует бинарное дерево в виде списка
+    
+    Структура: [root, left_subtree, right_subtree]
+    
+    Args:
+        height: Высота дерева (по умолчанию 3)
+        root: Значение корневого узла (по умолчанию 13)
+        l_b: Функция для вычисления левого потомка
+        r_b: Функция для вычисления правого потомка
+        
+    Returns:
+        Список, представляющий бинарное дерево
+    """
+    if height < 0:
+        raise ValueError("Высота дерева не может быть отрицательной")
+    
+    left_func = l_b if l_b is not None else left_branch
+    right_func = r_b if r_b is not None else right_branch
+    
+    if height == 0:
+        return [root]
+    
+    left_child = gen_bin_tree_list(height - 1, left_func(root), left_func, right_func)
+    right_child = gen_bin_tree_list(height - 1, right_func(root), left_func, right_func)
+    
+    return [root, left_child, right_child]
+
+
+def gen_bin_tree_tuple(height: int = 3, root: int = 13,
+                      l_b: Optional[Callable[[int], int]] = None,
+                      r_b: Optional[Callable[[int], int]] = None) -> tuple:
+    """
+    Рекурсивно генерирует бинарное дерево в виде кортежа
+    
+    Структура: (root, left_subtree, right_subtree)
+    
+    Args:
+        height: Высота дерева
+        root: Значение корневого узла
+        l_b: Функция для вычисления левого потомка
+        r_b: Функция для вычисления правого потомка
+        
+    Returns:
+        Кортеж, представляющий бинарное дерево
+    """
+    if height < 0:
+        raise ValueError("Высота дерева не может быть отрицательной")
+    
+    left_func = l_b if l_b is not None else left_branch
+    right_func = r_b if r_b is not None else right_branch
+    
+    if height == 0:
+        return (root,)
+    
+    left_child = gen_bin_tree_tuple(height - 1, left_func(root), left_func, right_func)
+    right_child = gen_bin_tree_tuple(height - 1, right_func(root), left_func, right_func)
+    
+    return (root, left_child, right_child)
+
+
+class TestAlternativeStructures(unittest.TestCase):
+    """Тесты для альтернативных структур данных"""
+    
+    def test_list_structure(self):
+        """Тест реализации со списком"""
+        result = gen_bin_tree_list(height=1, root=13)
+        expected = [13, [14], [12]]
+        self.assertEqual(result, expected)
+    
+    def test_tuple_structure(self):
+        """Тест реализации с кортежем"""
+        result = gen_bin_tree_tuple(height=1, root=13)
+        expected = (13, (14,), (12,))
+        self.assertEqual(result, expected)
+
+
+if __name__ == "__main__":
+    # Демонстрация работы функции
+    print("Дерево высоты 0:")
+    print(gen_bin_tree(height=0, root=13))
+    
+    print("\nДерево высоты 1:")
+    print(gen_bin_tree(height=1, root=13))
+    
+    print("\nДерево высоты 2:")
+    print(gen_bin_tree(height=2, root=13))
+    
+    print("\nДерево с параметрами по умолчанию (height 3, root 13):")
+    print(gen_bin_tree())
+    
+    print("\nДерево с пользовательскими параметрами:")
+    custom_tree = gen_bin_tree(
+        height=2, 
+        root=5, 
+        l_b=lambda x: x * 2, 
+        r_b=lambda x: x + 10
+    )
+    print(custom_tree)
+    
+    # Запуск тестов
+    print("\nЗапуск тестов...")
+    unittest.main(argv=[''], verbosity=2, exit=False)
