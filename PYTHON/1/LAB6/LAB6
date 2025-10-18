@@ -1,0 +1,204 @@
+import timeit
+import matplotlib.pyplot as plt
+from collections import deque
+from functools import cache
+
+
+# РЕКУРСИВНАЯ ВЕРСИЯ
+def build_tree_recursive(root: int, height: int,
+                         left_function=lambda x: x + 1,
+                         right_function=lambda x: x - 1) -> dict:
+    """Построение бинарного дерева рекурсивным способом.
+
+    Args:
+        root (int): значение корня дерева.
+        height (int): высота дерева.
+        left_function (callable): функция вычисления левого потомка.
+        right_function (callable): функция вычисления правого потомка.
+
+    Returns:
+        dict: бинарное дерево в виде вложенных словарей.
+    """
+    def building(current_height: int, current_root: int) -> dict | None:
+        """Рекурсивное построение ветвей дерева."""
+        if current_height <= 0:
+            return None
+
+        left_value = left_function(current_root)
+        right_value = right_function(current_root)
+
+        left_subtree = building(current_height - 1, left_value)
+        right_subtree = building(current_height - 1, right_value)
+
+        branch = {'root': current_root}
+        if left_subtree is not None:
+            branch['left'] = left_subtree
+        if right_subtree is not None:
+            branch['right'] = right_subtree
+        return branch
+
+    return building(height, root)
+
+
+# ИТЕРАТИВНАЯ ВЕРСИЯ
+def build_tree_iterative(root: int, height: int,
+                         left_function=lambda x: x + 1,
+                         right_function=lambda x: x - 1) -> dict:
+    """Построение бинарного дерева итеративным способом.
+
+    Args:
+        root (int): значение корня дерева.
+        height (int): высота дерева.
+        left_function (callable): функция вычисления левого потомка.
+        right_function (callable): функция вычисления правого потомка.
+
+    Returns:
+        dict: бинарное дерево, представленное в виде словаря.
+    """
+    if height <= 0:
+        return {}
+
+    nodes = [root]
+    for i in range(1, height):
+        nodes_help = []
+        for j in nodes[2 ** (i - 1) - 1:]:
+            nodes_help.append(left_function(j))
+            nodes_help.append(right_function(j))
+        nodes += nodes_help
+
+    tree = {}
+    queue = deque()
+
+    tree['root'] = nodes[0]
+    queue.append(('root', 0))
+
+    while queue:
+        current_path, current_index = queue.popleft()
+
+        left_index = 2 * current_index + 1
+        right_index = 2 * current_index + 2
+
+        if left_index < len(nodes):
+            left_path = f"{current_path}.left"
+            tree[left_path] = nodes[left_index]
+            queue.append((left_path, left_index))
+
+        if right_index < len(nodes):
+            right_path = f"{current_path}.right"
+            tree[right_path] = nodes[right_index]
+            queue.append((right_path, right_index))
+
+    return tree
+
+
+# КЭШИРОВАННЫЕ ВЕРСИИ
+@cache
+def build_tree_recursive_cache(root: int, height: int,
+                               left_function=lambda x: x + 1,
+                               right_function=lambda x: x - 1) -> dict:
+    """Рекурсивное построение бинарного дерева с кэшированием."""
+    return build_tree_recursive(root, height, left_function, right_function)
+
+
+@cache
+def build_tree_iterative_cache(root: int, height: int,
+                               left_function=lambda x: x + 1,
+                               right_function=lambda x: x - 1) -> dict:
+    """Итеративное построение бинарного дерева с кэшированием."""
+    return build_tree_iterative(root, height, left_function, right_function)
+
+
+# БЕНЧМАРК
+def benchmark(function, root: int, height: int, repeat: int = 5) -> float:
+    """Возвращает минимальное время выполнения функции."""
+    times = timeit.repeat(lambda: function(root, height), number=5, repeat=repeat)
+    return min(times)
+
+
+# СРАВНЕНИЯ
+def compare_recursive_iterative():
+    """Сравнение рекурсивного и итеративного построений без кэширования."""
+    heights = list(range(1, 21))
+    res_recursive = []
+    res_iterative = []
+
+    for h in heights:
+        res_recursive.append(benchmark(build_tree_recursive, 13, h))
+        res_iterative.append(benchmark(build_tree_iterative, 13, h))
+
+    plt.plot(heights, res_recursive, label="Рекурсивный без кэширования")
+    plt.plot(heights, res_iterative, label="Итеративный без кэширования")
+    plt.xlabel("Высота дерева")
+    plt.ylabel("Время (сек)")
+    plt.title("Сравнение рекурсивного и итеративного построений бинарного дерева")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+def compare_recursive_iterative_cache():
+    """Сравнение рекурсивного и итеративного построений с кэшированием."""
+    heights = list(range(1, 21))
+    res_recursive_cache = []
+    res_iterative_cache = []
+
+    for h in heights:
+        res_recursive_cache.append(benchmark(build_tree_recursive_cache, 13, h))
+        res_iterative_cache.append(benchmark(build_tree_iterative_cache, 13, h))
+
+    plt.plot(heights, res_recursive_cache, label="Рекурсивный с кэшированием")
+    plt.plot(heights, res_iterative_cache, label="Итеративный с кэшированием")
+    plt.xlabel("Высота дерева")
+    plt.ylabel("Время (сек)")
+    plt.title("Сравнение рекурсивного и итеративного построений (с кэшированием)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+def compare_recursive_cache():
+    """Сравнение рекурсивного построения с кэшированием и без."""
+    heights = list(range(1, 21))
+    res_recursive = []
+    res_recursive_cache = []
+
+    for h in heights:
+        res_recursive.append(benchmark(build_tree_recursive, 13, h))
+        res_recursive_cache.append(benchmark(build_tree_recursive_cache, 13, h))
+
+    plt.plot(heights, res_recursive, label="Без кэширования")
+    plt.plot(heights, res_recursive_cache, label="С кэшированием")
+    plt.xlabel("Высота дерева")
+    plt.ylabel("Время (сек)")
+    plt.title("Рекурсивное построение бинарного дерева (сравнение кэширования)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+def compare_iterative_cache():
+    """Сравнение итеративного построения с кэшированием и без."""
+    heights = list(range(1, 21))
+    res_iterative = []
+    res_iterative_cache = []
+
+    for h in heights:
+        res_iterative.append(benchmark(build_tree_iterative, 13, h))
+        res_iterative_cache.append(benchmark(build_tree_iterative_cache, 13, h))
+
+    plt.plot(heights, res_iterative, label="Без кэширования")
+    plt.plot(heights, res_iterative_cache, label="С кэшированием")
+    plt.xlabel("Высота дерева")
+    plt.ylabel("Время (сек)")
+    plt.title("Итеративное построение бинарного дерева (сравнение кэширования)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+# MAIN
+if __name__ == "__main__":
+    compare_recursive_iterative()
+    compare_recursive_iterative_cache()
+    compare_recursive_cache()
+    compare_iterative_cache()
