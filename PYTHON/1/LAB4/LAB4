@@ -1,0 +1,56 @@
+"""
+Сравнение времени работы рекурсивного и итеративного вычисления факториала.
+Используется модуль timeit для измерения времени и matplotlib для визуализации.
+"""
+
+import timeit
+import matplotlib.pyplot as plt
+from typing import Callable, List
+
+
+# --- Реализации факториала ---
+def fact_recursive(n: int) -> int:
+    """Рекурсивный факториал."""
+    return 1 if n <= 1 else n * fact_recursive(n - 1)
+
+
+def fact_iterative(n: int) -> int:
+    """Итеративный факториал (через цикл)."""
+    fact = 1
+    for i in range(2, n + 1):
+        fact *= i
+    return fact
+
+
+# --- Функция измерения времени ---
+def benchmark(func: Callable[[int], int], n: int, repeat: int = 10, number: int = 10) -> float:
+    """Возвращает минимальное среднее время выполнения func(n)."""
+    times = timeit.repeat(lambda: func(n), number=number, repeat=repeat)
+    return min(times) / number
+
+
+def main() -> None:
+    """Основная функция: проводит сравнение и строит график."""
+    test_data: List[int] = list(range(10, 700, 20))
+    res_recursive: List[float] = []
+    res_iterative: List[float] = []
+
+    print("Тестирование, подождите...")
+
+    for n in test_data:
+        res_recursive.append(benchmark(fact_recursive, n))
+        res_iterative.append(benchmark(fact_iterative, n))
+
+    # Визуализация результатов
+    plt.plot(test_data, res_recursive, label="Рекурсивный факториал")
+    plt.plot(test_data, res_iterative, label="Итеративный факториал")
+    plt.xlabel("n")
+    plt.ylabel("Время (сек)")
+    plt.title("Сравнение рекурсивного и итеративного факториала")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+
+if __name__ == "__main__":
+    main()
