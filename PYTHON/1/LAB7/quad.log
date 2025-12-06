@@ -1,0 +1,22 @@
+INFO: Запуск demo_quad(1, -5, 6)
+INFO: demo_quad вернула (3.0, 2.0)
+INFO: Запуск demo_quad(1, -4, 4)
+INFO: demo_quad вернула (2.0, 2.0)
+INFO: Запуск demo_quad(1, 0, 1)
+ERROR: Ошибка в demo_quad: ValueError: Дискриминант меньше нуля — корней нет
+INFO: Запуск demo_quad(1, -5, 6)
+INFO: demo_quad вернула (3.0, 2.0)
+INFO: Запуск demo_quad(1, -4, 4)
+INFO: demo_quad вернула (2.0, 2.0)
+INFO: Запуск demo_quad(1, 0, 1)
+ERROR: Ошибка в demo_quad: ValueError: Дискриминант меньше нуля — корней нет
+INFO: Запуск demo_quad(1, -5, 6)
+INFO: demo_quad вернула (3.0, 2.0)
+INFO: Запуск demo_quad(1, -4, 4)
+INFO: demo_quad вернула (2.0, 2.0)
+INFO: Запуск demo_quad(1, 0, 1)
+ERROR: Ошибка в demo_quad: ValueError: Дискриминант меньше нуля — корней нет
+INFO: Запуск demo_quad(0, 2, 3)
+ERROR: Ошибка в demo_quad: ValueError: Коэффициент 'a' не может быть равен нулю в квадратном уравнении
+INFO: Запуск demo_quad('abc', 2, 3)
+ERROR: Ошибка в demo_quad: TypeError: Коэффициенты должны быть числами

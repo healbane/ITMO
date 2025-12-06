@@ -1,0 +1,64 @@
+INFO: Запуск get_currencies(['USD'])
+INFO: get_currencies вернула {'USD': 76.0937}
+INFO: Запуск demo_usd_eur()
+INFO: Запуск get_currencies(['USD', 'EUR'])
+INFO: get_currencies вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: demo_usd_eur вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: Запуск get_currencies(['USD'])
+INFO: get_currencies вернула {'USD': 76.0937}
+INFO: Запуск demo_usd_eur()
+INFO: Запуск get_currencies(['USD', 'EUR'])
+INFO: get_currencies вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: demo_usd_eur вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: Запуск solve_quadratic(1, -5, 6)
+INFO: solve_quadratic вернула (3.0, 2.0)
+INFO: Запуск solve_quadratic(1, -4, 4)
+INFO: solve_quadratic вернула (2.0, 2.0)
+INFO: Запуск solve_quadratic(1, 0, 1)
+ERROR: Ошибка в solve_quadratic: ValueError: Дискриминант меньше нуля — корней нет
+INFO: Запуск get_currencies(['USD'])
+INFO: get_currencies вернула {'USD': 76.0937}
+INFO: Запуск demo_usd_eur()
+INFO: Запуск get_currencies(['USD', 'EUR'])
+INFO: get_currencies вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: demo_usd_eur вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: Запуск solve_quadratic(1, -5, 6)
+INFO: solve_quadratic вернула (3.0, 2.0)
+INFO: Запуск solve_quadratic(1, -4, 4)
+INFO: solve_quadratic вернула (2.0, 2.0)
+INFO: Запуск solve_quadratic(1, 0, 1)
+ERROR: Ошибка в solve_quadratic: ValueError: Дискриминант меньше нуля — корней нет
+INFO: Запуск get_currencies(['USD'])
+INFO: get_currencies вернула {'USD': 76.0937}
+INFO: Запуск demo_usd_eur()
+INFO: Запуск get_currencies(['USD', 'EUR'])
+INFO: get_currencies вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: demo_usd_eur вернула {'USD': 76.0937, 'EUR': 88.7028}
+INFO: Запуск solve_quadratic(1, -5, 6)
+INFO: solve_quadratic вернула (3.0, 2.0)
+INFO: Запуск solve_quadratic(1, -4, 4)
+INFO: solve_quadratic вернула (2.0, 2.0)
+INFO: Запуск solve_quadratic(1, 0, 1)
+ERROR: Ошибка в solve_quadratic: ValueError: Дискриминант меньше нуля — корней нет
+INFO: Запуск solve_quadratic(0, 2, 3)
+ERROR: Ошибка в solve_quadratic: ValueError: Коэффициент 'a' не может быть равен нулю в квадратном уравнении
+INFO: Запуск solve_quadratic('abc', 2, 3)
+ERROR: Ошибка в solve_quadratic: TypeError: Коэффициенты должны быть числами
+INFO: Запуск get_currencies(['USD'])
+ERROR: Ошибка в get_currencies: KeyError: "Валюта 'USD' отсутствует в данных ЦБ"
+INFO: Запуск get_currencies(['USD'])
+ERROR: Ошибка в get_currencies: KeyError: "В ответе API отсутствует ключ 'Valute'"
+INFO: Запуск get_currencies(['USD', 'EUR'])
+INFO: get_currencies вернула {'USD': 76.55, 'EUR': 83.1}
+INFO: Запуск get_currencies(['USD'])
+ERROR: Ошибка в get_currencies: TypeError: Некорректный тип курса валюты 'USD'
+INFO: Запуск solve_quadratic(0, 2, 3)
+ERROR: Ошибка в solve_quadratic: ValueError: Коэффициент 'a' не может быть равен нулю в квадратном уравнении
+INFO: Запуск solve_quadratic(1, 0, 1)
+ERROR: Ошибка в solve_quadratic: ValueError: Дискриминант меньше нуля — корней нет
+INFO: Запуск solve_quadratic(1, -4, 4)
+INFO: solve_quadratic вернула (2.0, 2.0)
+INFO: Запуск solve_quadratic(1, -5, 6)
+INFO: solve_quadratic вернула (3.0, 2.0)
+INFO: Запуск solve_quadratic('abc', 2, 3)
+ERROR: Ошибка в solve_quadratic: TypeError: Коэффициенты должны быть числами
